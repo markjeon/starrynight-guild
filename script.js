@@ -226,11 +226,9 @@ function createMemberCard(member, index) {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'member-card';
     cardDiv.innerHTML = `
-        <div class="member-card-inner">
-            <div class="member-card-front" style="background-image: url('${member.image}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-                <h3 class="member-name">${member.name}</h3>
-                <button onclick="removeMember(${index})" class="remove-btn admin-only" style="position: absolute; bottom: 15px; right: 15px; padding: 8px 12px; background: rgba(255,0,0,0.8); border: none; border-radius: 6px; color: white; cursor: pointer; font-size: 0.8rem; z-index: 100; display: none; font-weight: bold;">삭제</button>
-            </div>
+        <div class="member-card-front" style="background-image: url('${member.image}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <h3 class="member-name">${member.name}</h3>
+            <button onclick="removeMember(${index})" class="remove-btn admin-only" style="position: absolute; bottom: 15px; right: 15px; padding: 8px 12px; background: rgba(255,0,0,0.8); border: none; border-radius: 6px; color: white; cursor: pointer; font-size: 0.8rem; z-index: 100; display: none; font-weight: bold;">삭제</button>
         </div>
     `;
     
@@ -245,6 +243,45 @@ function removeMember(index) {
         renderMembers();
         showNotification('길드원이 삭제되었습니다.');
     }
+}
+
+// 갤러리 이미지 추가
+function addGalleryImage() {
+    const title = document.getElementById('galleryTitle').value;
+    const fileInput = document.getElementById('galleryImage');
+    const file = fileInput.files[0];
+    
+    if (!title) {
+        showNotification('사진 제목을 입력해주세요.', 'error');
+        return;
+    }
+    
+    if (!file) {
+        showNotification('이미지를 선택해주세요.', 'error');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const galleryGrid = document.querySelector('.gallery-grid');
+        const newGalleryItem = document.createElement('div');
+        newGalleryItem.className = 'gallery-item';
+        newGalleryItem.innerHTML = `
+            <img src="${e.target.result}" alt="${title}" class="gallery-image">
+            <div class="gallery-overlay">
+                <div class="gallery-text">${title}</div>
+            </div>
+        `;
+        
+        galleryGrid.appendChild(newGalleryItem);
+        
+        // 입력 필드 초기화
+        document.getElementById('galleryTitle').value = '';
+        fileInput.value = '';
+        
+        showNotification('갤러리 이미지가 추가되었습니다!');
+    };
+    reader.readAsDataURL(file);
 }
 
 // 알림 표시
