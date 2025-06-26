@@ -569,7 +569,7 @@ body {
     }
 }
 
-/* 유리 빛나는 효과 */
+/* 유리 빛나는 효과 - v1.0.4 업데이트 */
 .member-card::before {
     content: '';
     position: absolute;
