@@ -229,11 +229,9 @@ function createMemberCard(member, index) {
     cardDiv.className = 'member-card';
     cardDiv.innerHTML = `
         <div class="member-card-inner">
-            <div class="member-card-front">
+            <div class="member-card-front" style="background-image: url('${member.image}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
                 <h3 class="member-name">${member.name}</h3>
-                <img src="${member.image}" alt="${member.name}" class="member-image" 
-                     onerror="this.src='https://via.placeholder.com/160x220/4a90e2/ffffff?text=${encodeURIComponent(member.name)}'">
-                <button onclick="removeMember(${index})" class="remove-btn admin-only" style="position: absolute; bottom: 10px; right: 10px; padding: 5px 10px; background: rgba(255,0,0,0.7); border: none; border-radius: 3px; color: white; cursor: pointer; font-size: 0.7rem; z-index: 100; display: none;">삭제</button>
+                <button onclick="removeMember(${index})" class="remove-btn admin-only" style="position: absolute; bottom: 15px; right: 15px; padding: 8px 12px; background: rgba(255,0,0,0.8); border: none; border-radius: 6px; color: white; cursor: pointer; font-size: 0.8rem; z-index: 100; display: none; font-weight: bold;">삭제</button>
             </div>
         </div>
     `;
@@ -317,6 +315,46 @@ function createStars() {
     }
 }
 
+// 배너 파티클 효과 생성
+function createBannerParticles() {
+    const bannerContainer = document.querySelector('.banner-overlay');
+    
+    // 파티클 컨테이너 생성
+    const particlesContainer = document.createElement('div');
+    particlesContainer.className = 'banner-particles';
+    particlesContainer.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    `;
+    
+    // 50개의 파티클 생성
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'banner-particle';
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 6 + 2}px;
+            height: ${Math.random() * 6 + 2}px;
+            background: radial-gradient(circle, #ffd700 0%, #ffeb3b 50%, transparent 100%);
+            border-radius: 50%;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            opacity: 0;
+            animation: bannerParticleFloat ${Math.random() * 4 + 3}s ease-in-out infinite;
+            animation-delay: ${Math.random() * 2}s;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        `;
+        particlesContainer.appendChild(particle);
+    }
+    
+    bannerContainer.appendChild(particlesContainer);
+}
+
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
     // 이벤트 리스너 등록
@@ -327,6 +365,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 별 생성
     createStars();
+    
+    // 배너 파티클 생성
+    createBannerParticles();
     
     // 스크롤 효과
     window.addEventListener('scroll', function() {

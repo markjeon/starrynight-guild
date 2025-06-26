@@ -206,6 +206,34 @@ body {
     }
 }
 
+/* 배너 파티클 애니메이션 */
+@keyframes bannerParticleFloat {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.5);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(0px) scale(1);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.3);
+    }
+}
+
+.banner-particles {
+    pointer-events: none;
+}
+
+.banner-particle {
+    filter: blur(0.5px);
+}
+
 .banner-overlay > * {
     position: relative;
     z-index: 2;
@@ -304,26 +332,26 @@ body {
 
 .members-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 /* 포켓몬카드 스타일 */
 .member-card {
-    width: 245px;
-    height: 342px;
+    width: 320px;
+    height: 450px;
     margin: 15px;
     cursor: pointer;
     position: relative;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
-    border-radius: 16px;
-    padding: 6px;
+    background: linear-gradient(145deg, #ffd700 0%, #ffeb3b 50%, #fff59d 100%);
+    border-radius: 20px;
+    padding: 8px;
     box-shadow: 
-        0 4px 15px rgba(0, 0, 0, 0.2),
-        0 0 0 1px rgba(255, 215, 0, 0.1);
+        0 6px 20px rgba(0, 0, 0, 0.3),
+        0 0 0 2px rgba(255, 215, 0, 0.6);
     animation: cardGlow 3s ease-in-out infinite alternate;
 }
 
@@ -354,22 +382,25 @@ body {
 .member-card-inner {
     width: 100%;
     height: 100%;
-    background: linear-gradient(145deg, #2d4a87 0%, #1e3a8a 30%, #7c3aed 100%);
-    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.9) 0%, rgba(255, 235, 59, 0.8) 50%, rgba(255, 245, 157, 0.9) 100%);
+    border-radius: 16px;
     position: relative;
     overflow: hidden;
-    border: 2px solid rgba(255, 215, 0, 0.4);
+    border: 3px solid rgba(255, 215, 0, 0.8);
 }
 
 .member-card-front {
     position: relative;
     width: 100%;
     height: 100%;
-    border-radius: 12px;
-    padding: 15px;
+    border-radius: 16px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     background: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .member-card-back {
@@ -449,34 +480,30 @@ body {
 }
 
 .member-image {
-    width: 160px;
-    height: 220px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin: 10px auto 15px auto;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 
-        0 2px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    display: none;
 }
 
 .member-name {
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 800;
     margin-bottom: 5px;
-    color: #fff;
+    color: #000;
     text-shadow: 
-        0 1px 2px rgba(0, 0, 0, 0.8),
-        0 0 8px rgba(255, 215, 0, 0.4);
-    background: linear-gradient(45deg, #ffd700, #fff59d);
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(255, 215, 0, 0.6);
+    background: linear-gradient(45deg, #000 0%, #333 50%, #000 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: left;
     position: absolute;
-    top: 15px;
-    left: 15px;
+    top: 20px;
+    left: 20px;
     z-index: 100;
+    padding: 8px 12px;
+    background-color: rgba(255, 215, 0, 0.9);
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
 }
 
 .member-class {
