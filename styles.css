@@ -1,0 +1,747 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* 배경 별들 애니메이션 */
+.stars, .twinkling {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;
+}
+
+.stars {
+    background: #000 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="80" cy="20" r="0.3" fill="white" opacity="0.6"/><circle cx="30" cy="40" r="0.4" fill="white" opacity="0.7"/><circle cx="70" cy="60" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="80" r="0.6" fill="white" opacity="0.9"/><circle cx="90" cy="90" r="0.3" fill="white" opacity="0.6"/></svg>') repeat;
+    background-size: 100px 100px;
+    animation: move-stars 200s linear infinite;
+}
+
+.twinkling {
+    background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="0.4" fill="gold" opacity="1"><animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="75" cy="35" r="0.3" fill="lightblue" opacity="1"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></circle><circle cx="45" cy="65" r="0.5" fill="pink" opacity="1"><animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite"/></circle></svg>') repeat;
+    background-size: 200px 200px;
+    animation: move-twinkle 100s linear infinite;
+}
+
+@keyframes move-stars {
+    from { transform: translateX(0px); }
+    to { transform: translateX(-100px); }
+}
+
+@keyframes move-twinkle {
+    from { transform: translateX(0px); }
+    to { transform: translateX(-200px); }
+}
+
+/* 관리자 모드 */
+.admin-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.admin-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.admin-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    transition: right 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+}
+
+.admin-panel.active {
+    right: 0;
+}
+
+.admin-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-section h4 {
+    margin-bottom: 15px;
+    color: #ffd700;
+}
+
+.admin-section input,
+.admin-section textarea,
+.admin-section button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 5px;
+}
+
+.admin-section button {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.admin-section button:hover {
+    transform: translateY(-2px);
+}
+
+/* 컨테이너 */
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* 헤더 */
+.guild-header {
+    position: relative;
+    height: 60vh;
+    min-height: 400px;
+    overflow: hidden;
+}
+
+.banner-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.guild-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.banner-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.banner-star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    animation: bannerTwinkle 2s ease-in-out infinite;
+}
+
+.banner-star:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+.banner-star:nth-child(2) { top: 30%; left: 80%; animation-delay: 0.5s; }
+.banner-star:nth-child(3) { top: 60%; left: 25%; animation-delay: 1s; }
+.banner-star:nth-child(4) { top: 15%; left: 70%; animation-delay: 1.5s; }
+.banner-star:nth-child(5) { top: 75%; left: 60%; animation-delay: 0.3s; }
+.banner-star:nth-child(6) { top: 40%; left: 40%; animation-delay: 0.8s; }
+.banner-star:nth-child(7) { top: 80%; left: 20%; animation-delay: 1.2s; }
+.banner-star:nth-child(8) { top: 25%; left: 50%; animation-delay: 0.2s; }
+
+@keyframes bannerTwinkle {
+    0%, 100% { 
+        opacity: 0.3;
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    50% { 
+        opacity: 1;
+        transform: scale(1.5);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 25px rgba(255, 215, 0, 0.6);
+    }
+}
+
+.banner-overlay > * {
+    position: relative;
+    z-index: 2;
+}
+
+.guild-name {
+    font-size: 4rem;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #ffd700, #ffeb3b, #fff59d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+    to { text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.8); }
+}
+
+.guild-info {
+    display: flex;
+    gap: 30px;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.guild-info span {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 길드 소개 */
+.guild-intro {
+    padding: 100px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.intro-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.guild-intro h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #ffd700;
+}
+
+.guild-intro p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 50px;
+    opacity: 0.9;
+}
+
+.guild-stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 50px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* 길드원 섹션 */
+.members-section {
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.members-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: #ffd700;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 포켓몬카드 스타일 */
+.member-card {
+    width: 245px;
+    height: 342px;
+    margin: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 215, 0, 0.1);
+    animation: cardGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes cardGlow {
+    0% {
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 215, 0, 0.1),
+            0 0 10px rgba(255, 215, 0, 0.1);
+    }
+    100% {
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 215, 0, 0.3),
+            0 0 20px rgba(255, 215, 0, 0.3);
+    }
+}
+
+.member-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 2px rgba(255, 215, 0, 0.6),
+        0 0 30px rgba(255, 215, 0, 0.4);
+    animation: none;
+}
+
+.member-card-inner {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #2d4a87 0%, #1e3a8a 30%, #7c3aed 100%);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255, 215, 0, 0.4);
+}
+
+.member-card-front {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    background: none;
+}
+
+.member-card-back {
+    display: none;
+}
+
+/* 카드 외곽 금테 효과 */
+.member-card-front::after,
+.member-card-back::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ffd700, #ffed4e, #fff59d, #ffd700, #ffed4e, #fff59d);
+    background-size: 400% 400%;
+    border-radius: 25px;
+    z-index: -1;
+    animation: goldBorder 3s ease-in-out infinite;
+}
+
+@keyframes goldBorder {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 내부 금테 */
+.member-card-front::before,
+.member-card-back::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    border-radius: 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.1) 0%,
+        rgba(255, 235, 59, 0.05) 25%,
+        rgba(255, 245, 157, 0.1) 50%,
+        rgba(255, 235, 59, 0.05) 75%,
+        rgba(255, 215, 0, 0.1) 100%);
+    z-index: 0;
+}
+
+.member-card-front {
+    background: none;
+    position: relative;
+    justify-content: flex-start;
+}
+
+.member-card-back {
+    background: linear-gradient(145deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+}
+
+/* 카드 내용 요소들을 z-index로 앞으로 */
+.member-card-front > *,
+.member-card-back > * {
+    position: relative;
+    z-index: 10;
+}
+
+/* 삭제 버튼 기본 숨김 */
+.remove-btn {
+    display: none !important;
+}
+
+/* 관리자 모드에서만 삭제 버튼 표시 */
+.admin-mode .remove-btn {
+    display: block !important;
+}
+
+.member-image {
+    z-index: 10;
+}
+
+.member-image {
+    width: 160px;
+    height: 220px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin: 10px auto 15px auto;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.member-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #fff;
+    text-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(255, 215, 0, 0.4);
+    background: linear-gradient(45deg, #ffd700, #fff59d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: left;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 100;
+}
+
+.member-class {
+    font-size: 1.3rem;
+    color: #ffd700;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.member-level {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    margin-bottom: 25px;
+    color: #ffeb3b;
+    font-weight: 500;
+}
+
+
+/* 포켓몬카드 홀로그램 효과 */
+.member-card-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 215, 0, 0.1) 40%,
+        rgba(255, 235, 59, 0.2) 50%,
+        rgba(255, 215, 0, 0.1) 60%,
+        transparent 70%);
+    transform: translateX(-100%);
+    animation: holoShine 3s infinite;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 12px;
+}
+
+.member-card:hover .member-card-inner::before {
+    animation: holoShine 1s infinite;
+}
+
+@keyframes holoShine {
+    0% { transform: translateX(-100%) skewX(-25deg); }
+    100% { transform: translateX(200%) skewX(-25deg); }
+}
+
+/* 추가 반짝이는 파티클 효과 */
+.member-card-inner::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 235, 59, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 245, 157, 0.3) 0%, transparent 50%);
+    opacity: 0;
+    animation: sparkle 4s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* 추가 반짝이는 파티클 효과 */
+.member-card-front {
+    overflow: hidden;
+}
+
+.member-card-front::before {
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* 삭제됨 - 새로운 홀로그램 효과로 대체 */
+
+/* 갤러리 섹션 */
+.gallery-section {
+    padding: 100px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.gallery-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: #ffd700;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(255, 215, 0, 0.2);
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(255, 215, 0, 0.4);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 30px 20px 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+}
+
+.gallery-text {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 가입 섹션 */
+.join-section {
+    padding: 100px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.join-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.join-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #ffd700;
+}
+
+.join-section p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.join-requirements {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.requirement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.req-icon {
+    font-size: 2rem;
+}
+
+.join-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.join-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* 푸터 */
+.footer {
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .guild-name {
+        font-size: 2.5rem;
+    }
+    
+    .guild-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .guild-stats {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .join-requirements {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .admin-panel {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .members-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-item {
+        margin: 0 auto;
+        max-width: 350px;
+    }
+}
