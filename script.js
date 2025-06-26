@@ -158,12 +158,11 @@ function uploadBanner() {
 // 길드원 추가
 function addMember() {
     const name = document.getElementById('memberName').value;
-    const intro = document.getElementById('memberIntro').value;
     const fileInput = document.getElementById('memberImage');
     const file = fileInput.files[0];
     
-    if (!name || !intro) {
-        showNotification('이름과 소개글을 입력해주세요.', 'error');
+    if (!name) {
+        showNotification('이름을 입력해주세요.', 'error');
         return;
     }
     
@@ -172,7 +171,7 @@ function addMember() {
         reader.onload = function(e) {
             const newMember = {
                 name: name,
-                intro: intro,
+                intro: '',
                 image: e.target.result
             };
             
@@ -186,7 +185,6 @@ function addMember() {
             
             // 입력 필드 초기화
             document.getElementById('memberName').value = '';
-            document.getElementById('memberIntro').value = '';
             fileInput.value = '';
             
             showNotification('길드원이 성공적으로 추가되었습니다!');
@@ -196,7 +194,7 @@ function addMember() {
         // 이미지 없이 추가
         const newMember = {
             name: name,
-            intro: intro,
+            intro: '',
             image: `./Images/${name}.png`
         };
         
