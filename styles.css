@@ -409,46 +409,7 @@ body {
     display: none;
 }
 
-/* 카드 외곽 금테 효과 */
-.member-card-front::after,
-.member-card-back::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #ffd700, #ffed4e, #fff59d, #ffd700, #ffed4e, #fff59d);
-    background-size: 400% 400%;
-    border-radius: 25px;
-    z-index: -1;
-    animation: goldBorder 3s ease-in-out infinite;
-}
-
-@keyframes goldBorder {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-
-/* 내부 금테 */
-.member-card-front::before,
-.member-card-back::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    border: 2px solid rgba(255, 215, 0, 0.6);
-    border-radius: 20px;
-    background: linear-gradient(135deg, 
-        rgba(255, 215, 0, 0.1) 0%,
-        rgba(255, 235, 59, 0.05) 25%,
-        rgba(255, 245, 157, 0.1) 50%,
-        rgba(255, 235, 59, 0.05) 75%,
-        rgba(255, 215, 0, 0.1) 100%);
-    z-index: 0;
-}
+/* 기존 내부 금테 제거 - 깨끗한 카드만 */
 
 .member-card-front {
     background: none;
