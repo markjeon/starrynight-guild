@@ -454,6 +454,10 @@ body {
     transform: translateX(-50%);
     z-index: 100;
     font-family: 'Noto Sans KR', sans-serif;
+    white-space: nowrap;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .member-class {
