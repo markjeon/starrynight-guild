@@ -641,56 +641,102 @@ body {
     color: #ffd700;
 }
 
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 30px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.gallery-item {
+.gallery-container {
     position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(255, 215, 0, 0.2);
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    border: 2px solid rgba(255, 215, 0, 0.3);
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-.gallery-item:hover {
-    transform: translateY(-10px) scale(1.02);
+.gallery-viewport {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery-slider {
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    gap: 20px;
+}
+
+.gallery-slide {
+    flex: 0 0 60%;
+    display: flex;
+    justify-content: center;
+    opacity: 0.6;
+    transform: scale(0.8);
+    transition: all 0.4s ease;
+}
+
+.gallery-slide.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.film-frame {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    background: #222;
+    border-radius: 10px;
+    padding: 20px;
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.4),
-        0 0 30px rgba(255, 215, 0, 0.4);
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.film-frame::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+.film-holes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 10px 30px, transparent 5px, #222 6px),
+        radial-gradient(circle at 10px 60px, transparent 5px, #222 6px),
+        radial-gradient(circle at 10px 90px, transparent 5px, #222 6px),
+        radial-gradient(circle at calc(100% - 10px) 30px, transparent 5px, #222 6px),
+        radial-gradient(circle at calc(100% - 10px) 60px, transparent 5px, #222 6px),
+        radial-gradient(circle at calc(100% - 10px) 90px, transparent 5px, #222 6px);
+    pointer-events: none;
 }
 
 .gallery-image {
     width: 100%;
     height: 300px;
     object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.gallery-item:hover .gallery-image {
-    transform: scale(1.1);
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .gallery-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-    padding: 30px 20px 20px;
+    padding: 20px;
+    border-radius: 5px;
     transform: translateY(100%);
     transition: transform 0.3s ease;
 }
 
-.gallery-item:hover .gallery-overlay {
+.film-frame:hover .gallery-overlay {
     transform: translateY(0);
 }
 
@@ -698,7 +744,51 @@ body {
     color: white;
     font-size: 1.2rem;
     font-weight: 500;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.gallery-nav {
+    background: rgba(255, 215, 0, 0.8);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-nav:hover {
+    background: #ffd700;
+    transform: scale(1.1);
+}
+
+.gallery-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.gallery-remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.8);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.gallery-remove-btn:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.05);
 }
 
 /* 가입 섹션 */

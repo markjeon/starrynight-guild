@@ -52,6 +52,9 @@ let guildMembers = [
     },
 ];
 
+// 갤러리 데이터 저장소
+let galleryImages = [];
+
 // 관리자 모드 토글
 function toggleAdmin() {
     const panel = document.getElementById('adminPanel');
@@ -81,11 +84,21 @@ function toggleAdmin() {
         removeBtns.forEach(btn => {
             btn.style.display = 'block';
         });
+        // 갤러리 삭제 버튼들 보이기
+        const galleryRemoveBtns = document.querySelectorAll('.gallery-remove-btn');
+        galleryRemoveBtns.forEach(btn => {
+            btn.style.display = 'block';
+        });
     } else {
         // 관리자 모드 클래스 제거
         document.body.classList.remove('admin-mode');
         // 관리자 모드 닫을 때 삭제 버튼들 숨기기
         removeBtns.forEach(btn => {
+            btn.style.display = 'none';
+        });
+        // 갤러리 삭제 버튼들 숨기기
+        const galleryRemoveBtns = document.querySelectorAll('.gallery-remove-btn');
+        galleryRemoveBtns.forEach(btn => {
             btn.style.display = 'none';
         });
     }
@@ -263,17 +276,14 @@ function addGalleryImage() {
     
     const reader = new FileReader();
     reader.onload = function(e) {
-        const galleryGrid = document.querySelector('.gallery-grid');
-        const newGalleryItem = document.createElement('div');
-        newGalleryItem.className = 'gallery-item';
-        newGalleryItem.innerHTML = `
-            <img src="${e.target.result}" alt="${title}" class="gallery-image">
-            <div class="gallery-overlay">
-                <div class="gallery-text">${title}</div>
-            </div>
-        `;
+        const newGalleryImage = {
+            title: title,
+            image: e.target.result
+        };
         
-        galleryGrid.appendChild(newGalleryItem);
+        galleryImages.push(newGalleryImage);
+        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+        renderGallery();
         
         // 입력 필드 초기화
         document.getElementById('galleryTitle').value = '';
@@ -282,6 +292,42 @@ function addGalleryImage() {
         showNotification('갤러리 이미지가 추가되었습니다!');
     };
     reader.readAsDataURL(file);
+}
+
+// 갤러리 렌더링
+function renderGallery() {
+    const gallerySlider = document.querySelector('.gallery-slider');
+    if (!gallerySlider) return;
+    
+    gallerySlider.innerHTML = '';
+    
+    galleryImages.forEach((item, index) => {
+        const gallerySlide = document.createElement('div');
+        gallerySlide.className = 'gallery-slide';
+        gallerySlide.innerHTML = `
+            <div class="film-frame">
+                <img src="${item.image}" alt="${item.title}" class="gallery-image">
+                <div class="film-holes"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-text">${item.title}</div>
+                </div>
+                <button onclick="removeGalleryImage(${index})" class="gallery-remove-btn admin-only" style="display: none;">삭제</button>
+            </div>
+        `;
+        gallerySlider.appendChild(gallerySlide);
+    });
+    
+    initGallerySlider();
+}
+
+// 갤러리 이미지 삭제
+function removeGalleryImage(index) {
+    if (confirm('정말로 이 갤러리 이미지를 삭제하시겠습니까?')) {
+        galleryImages.splice(index, 1);
+        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+        renderGallery();
+        showNotification('갤러리 이미지가 삭제되었습니다.');
+    }
 }
 
 // 알림 표시
@@ -324,7 +370,63 @@ function loadData() {
         guildMembers = JSON.parse(savedMembers);
     }
     
+    // 갤러리 데이터 로드
+    const savedGallery = localStorage.getItem('galleryImages');
+    if (savedGallery) {
+        galleryImages = JSON.parse(savedGallery);
+    } else {
+        // 기본 갤러리 이미지 설정
+        galleryImages = [
+            { title: "함께한 특별한 순간", image: "./Images/1.png" },
+            { title: "길드원들과의 추억", image: "./Images/2.png" }
+        ];
+        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+    }
+    
     renderMembers();
+    renderGallery();
+}
+
+// 갤러리 슬라이더 초기화
+let currentSlide = 0;
+
+function initGallerySlider() {
+    const slider = document.querySelector('.gallery-slider');
+    const slides = document.querySelectorAll('.gallery-slide');
+    
+    if (slides.length === 0) return;
+    
+    updateSliderPosition();
+}
+
+function updateSliderPosition() {
+    const slider = document.querySelector('.gallery-slider');
+    const slides = document.querySelectorAll('.gallery-slide');
+    
+    if (slides.length === 0) return;
+    
+    const slideWidth = 60; // 화면의 60% (중앙 50% + 좌우 5%씩)
+    slider.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+    
+    // 슬라이드 활성화 상태 업데이트
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+    });
+}
+
+function nextSlide() {
+    const slides = document.querySelectorAll('.gallery-slide');
+    if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSliderPosition();
+    }
+}
+
+function prevSlide() {
+    if (currentSlide > 0) {
+        currentSlide--;
+        updateSliderPosition();
+    }
 }
 
 // 별 애니메이션 강화
