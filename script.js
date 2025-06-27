@@ -52,7 +52,7 @@ let guildMembers = [
     },
 ];
 
-// 갤러리 데이터 저장소 - 기본 이미지들
+// 갤러리 데이터 저장소 - 숫자 파일명들
 let galleryImages = [
     {
         title: "함께한 특별한 순간",
@@ -62,6 +62,9 @@ let galleryImages = [
         title: "길드원들과의 추억", 
         image: "./Images/2.png"
     }
+    // 새 갤러리 이미지 추가 시:
+    // { title: "제목", image: "./Images/3.png" },
+    // { title: "제목", image: "./Images/4.png" }
 ];
 
 // 관리자 모드 토글
@@ -180,56 +183,38 @@ function uploadBanner() {
 // 길드원 추가
 function addMember() {
     const name = document.getElementById('memberName').value;
-    const fileInput = document.getElementById('memberImage');
-    const file = fileInput.files[0];
+    const intro = document.getElementById('memberIntro').value;
+    const imageFile = document.getElementById('memberImageFile').value;
     
     if (!name) {
         showNotification('이름을 입력해주세요.', 'error');
         return;
     }
     
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const newMember = {
-                name: name,
-                intro: '',
-                image: e.target.result
-            };
-            
-            guildMembers.push(newMember);
-            
-            // 로컬스토리지에 저장
-            localStorage.setItem('guildMembers', JSON.stringify(guildMembers));
-            
-            // UI 업데이트
-            renderMembers();
-            
-            // 입력 필드 초기화
-            document.getElementById('memberName').value = '';
-            fileInput.value = '';
-            
-            showNotification('길드원이 성공적으로 추가되었습니다!');
-        };
-        reader.readAsDataURL(file);
-    } else {
-        // 이미지 없이 추가
-        const newMember = {
-            name: name,
-            intro: '',
-            image: `./Images/${name}.png`
-        };
-        
-        guildMembers.push(newMember);
-        localStorage.setItem('guildMembers', JSON.stringify(guildMembers));
-        renderMembers();
-        
-        // 입력 필드 초기화
-        document.getElementById('memberName').value = '';
-        document.getElementById('memberIntro').value = '';
-        
-        showNotification('길드원이 성공적으로 추가되었습니다!');
+    if (!intro) {
+        showNotification('소개를 입력해주세요.', 'error');
+        return;
     }
+    
+    // 이미지 파일명이 없으면 이름.png로 자동 설정
+    const imagePath = imageFile ? `./Images/${imageFile}` : `./Images/${name}.png`;
+    
+    const newMember = {
+        name: name,
+        intro: intro,
+        image: imagePath
+    };
+    
+    guildMembers.push(newMember);
+    localStorage.setItem('guildMembers', JSON.stringify(guildMembers));
+    renderMembers();
+    
+    // 입력 필드 초기화
+    document.getElementById('memberName').value = '';
+    document.getElementById('memberIntro').value = '';
+    document.getElementById('memberImageFile').value = '';
+    
+    showNotification('길드원이 성공적으로 추가되었습니다!');
 }
 
 // 길드원 카드 렌더링
@@ -270,37 +255,31 @@ function removeMember(index) {
 // 갤러리 이미지 추가
 function addGalleryImage() {
     const title = document.getElementById('galleryTitle').value;
-    const fileInput = document.getElementById('galleryImage');
-    const file = fileInput.files[0];
+    const imageFile = document.getElementById('galleryImageFile').value;
     
     if (!title) {
         showNotification('사진 제목을 입력해주세요.', 'error');
         return;
     }
     
-    if (!file) {
-        showNotification('이미지를 선택해주세요.', 'error');
+    if (!imageFile) {
+        showNotification('이미지 파일명을 입력해주세요.', 'error');
         return;
     }
     
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const newGalleryImage = {
-            title: title,
-            image: e.target.result
-        };
-        
-        galleryImages.push(newGalleryImage);
-        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
-        renderGallery();
-        
-        // 입력 필드 초기화
-        document.getElementById('galleryTitle').value = '';
-        fileInput.value = '';
-        
-        showNotification('갤러리 이미지가 추가되었습니다!');
+    const newGalleryImage = {
+        title: title,
+        image: `./Images/${imageFile}`
     };
-    reader.readAsDataURL(file);
+    
+    galleryImages.push(newGalleryImage);
+    renderGallery();
+    
+    // 입력 필드 초기화
+    document.getElementById('galleryTitle').value = '';
+    document.getElementById('galleryImageFile').value = '';
+    
+    showNotification('갤러리 이미지가 추가되었습니다!');
 }
 
 // 갤러리 렌더링

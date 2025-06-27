@@ -38,15 +38,16 @@
         </div>
         <div class="admin-section">
             <h4>길드원 카드 추가</h4>
-            <input type="text" id="memberName" placeholder="길드원 이름">
-            <input type="file" id="memberImage" accept="image/*">
+            <input type="text" id="memberName" placeholder="길드원 이름 (예: 견신)">
+            <input type="text" id="memberIntro" placeholder="길드원 소개">
+            <input type="text" id="memberImageFile" placeholder="이미지 파일명 (예: 견신.png)">
             <button onclick="addMember()">길드원 추가</button>
         </div>
         
         <div class="admin-section">
             <h4>길드원과의 즐거운 한때 추가</h4>
             <input type="text" id="galleryTitle" placeholder="사진 제목">
-            <input type="file" id="galleryImage" accept="image/*">
+            <input type="text" id="galleryImageFile" placeholder="이미지 파일명 (예: 3.png)">
             <button onclick="addGalleryImage()">갤러리 추가</button>
         </div>
         <button onclick="toggleAdmin()">닫기</button>
