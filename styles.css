@@ -641,161 +641,131 @@ body {
     color: #ffd700;
 }
 
-.gallery-container {
-    position: relative;
+.gallery-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    padding: 20px;
 }
 
-.gallery-viewport {
-    width: 100%;
+.gallery-card {
+    position: relative;
+    border-radius: 20px;
     overflow: hidden;
-    position: relative;
-}
-
-.gallery-slider {
-    display: flex;
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    gap: 20px;
-}
-
-.gallery-slide {
-    flex: 0 0 60%;
-    display: flex;
-    justify-content: center;
-    opacity: 0.6;
-    transform: scale(0.8);
-    transition: all 0.4s ease;
-}
-
-.gallery-slide.active {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.film-frame {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    background: #000;
-    padding: 30px 60px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 
-        0 15px 40px rgba(0, 0, 0, 0.7),
-        inset 0 0 30px rgba(0, 0, 0, 0.8);
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
 }
 
-/* 35mm 필름 스프로킷 홀 */
-.film-frame::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        /* 왼쪽 스프로킷 홀 */
-        radial-gradient(circle at 25px 40px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 80px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 120px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 160px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 200px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 240px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 280px, transparent 8px, #000 9px),
-        radial-gradient(circle at 25px 320px, transparent 8px, #000 9px),
-        /* 오른쪽 스프로킷 홀 */
-        radial-gradient(circle at calc(100% - 25px) 40px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 80px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 120px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 160px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 200px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 240px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 280px, transparent 8px, #000 9px),
-        radial-gradient(circle at calc(100% - 25px) 320px, transparent 8px, #000 9px);
-    pointer-events: none;
-    z-index: 1;
+.gallery-card:hover {
+    transform: translateY(-15px) rotateX(5deg);
+    box-shadow: 
+        0 35px 70px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(255, 215, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 215, 0, 0.5);
 }
 
-.film-holes {
-    display: none;
+.gallery-card-inner {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
 }
 
-.gallery-image {
+.gallery-card-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.gallery-card-image img {
     width: 100%;
-    height: 300px;
+    height: 100%;
     object-fit: cover;
+    transition: all 0.6s ease;
+    filter: brightness(0.9) contrast(1.1);
+}
+
+.gallery-card:hover .gallery-card-image img {
+    transform: scale(1.1);
+    filter: brightness(1) contrast(1.2);
+}
+
+.gallery-card-content {
+    padding: 25px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.8));
+    backdrop-filter: blur(10px);
+}
+
+.gallery-card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffd700;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
     position: relative;
     z-index: 2;
-    display: block;
 }
 
-.gallery-overlay {
+.gallery-card-effects {
     position: absolute;
-    bottom: 30px;
-    left: 60px;
-    right: 60px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
-    padding: 15px;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    z-index: 3;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 215, 0, 0.1) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    pointer-events: none;
 }
 
-.film-frame:hover .gallery-overlay {
-    transform: translateY(0);
+.gallery-card:hover .gallery-card-effects {
+    animation: shimmer 1.5s ease-in-out;
 }
 
-.gallery-text {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 500;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.gallery-nav {
-    background: rgba(255, 215, 0, 0.8);
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    color: #000;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.gallery-nav:hover {
-    background: #ffd700;
-    transform: scale(1.1);
-}
-
-.gallery-nav:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
 }
 
 .gallery-remove-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     background: rgba(255, 0, 0, 0.8);
     border: none;
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: 8px;
     color: white;
     cursor: pointer;
     font-size: 0.8rem;
     font-weight: bold;
-    z-index: 100;
+    z-index: 1000;
     transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .gallery-remove-btn:hover {
     background: rgba(255, 0, 0, 1);
-    transform: scale(1.05);
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
 }
 
 /* 가입 섹션 */
@@ -918,12 +888,17 @@ body {
         transform: translateY(-5px) scale(1.1);
     }
     
-    .gallery-grid {
+    .gallery-cards-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     
-    .gallery-item {
-        margin: 0 auto;
+    .gallery-card {
         max-width: 350px;
+        margin: 0 auto;
+    }
+    
+    .gallery-card:hover {
+        transform: translateY(-10px) rotateX(2deg);
     }
 }

@@ -296,28 +296,28 @@ function addGalleryImage() {
 
 // 갤러리 렌더링
 function renderGallery() {
-    const gallerySlider = document.querySelector('.gallery-slider');
-    if (!gallerySlider) return;
+    const galleryCardsGrid = document.getElementById('galleryCardsGrid');
+    if (!galleryCardsGrid) return;
     
-    gallerySlider.innerHTML = '';
+    galleryCardsGrid.innerHTML = '';
     
     galleryImages.forEach((item, index) => {
-        const gallerySlide = document.createElement('div');
-        gallerySlide.className = 'gallery-slide';
-        gallerySlide.innerHTML = `
-            <div class="film-frame">
-                <img src="${item.image}" alt="${item.title}" class="gallery-image">
-                <div class="film-holes"></div>
-                <div class="gallery-overlay">
-                    <div class="gallery-text">${item.title}</div>
+        const galleryCard = document.createElement('div');
+        galleryCard.className = 'gallery-card';
+        galleryCard.innerHTML = `
+            <div class="gallery-card-inner">
+                <div class="gallery-card-image">
+                    <img src="${item.image}" alt="${item.title}">
                 </div>
-                <button onclick="removeGalleryImage(${index})" class="gallery-remove-btn admin-only" style="display: none;">삭제</button>
+                <div class="gallery-card-content">
+                    <h3 class="gallery-card-title">${item.title}</h3>
+                    <div class="gallery-card-effects"></div>
+                    <button onclick="removeGalleryImage(${index})" class="gallery-remove-btn admin-only" style="display: none;">삭제</button>
+                </div>
             </div>
         `;
-        gallerySlider.appendChild(gallerySlide);
+        galleryCardsGrid.appendChild(galleryCard);
     });
-    
-    initGallerySlider();
 }
 
 // 갤러리 이미지 삭제
@@ -387,47 +387,6 @@ function loadData() {
     renderGallery();
 }
 
-// 갤러리 슬라이더 초기화
-let currentSlide = 0;
-
-function initGallerySlider() {
-    const slider = document.querySelector('.gallery-slider');
-    const slides = document.querySelectorAll('.gallery-slide');
-    
-    if (slides.length === 0) return;
-    
-    updateSliderPosition();
-}
-
-function updateSliderPosition() {
-    const slider = document.querySelector('.gallery-slider');
-    const slides = document.querySelectorAll('.gallery-slide');
-    
-    if (slides.length === 0) return;
-    
-    const slideWidth = 60; // 화면의 60% (중앙 50% + 좌우 5%씩)
-    slider.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
-    
-    // 슬라이드 활성화 상태 업데이트
-    slides.forEach((slide, index) => {
-        slide.classList.toggle('active', index === currentSlide);
-    });
-}
-
-function nextSlide() {
-    const slides = document.querySelectorAll('.gallery-slide');
-    if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        updateSliderPosition();
-    }
-}
-
-function prevSlide() {
-    if (currentSlide > 0) {
-        currentSlide--;
-        updateSliderPosition();
-    }
-}
 
 // 별 애니메이션 강화
 function createStars() {
