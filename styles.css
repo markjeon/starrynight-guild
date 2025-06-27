@@ -642,12 +642,15 @@ body {
 }
 
 .gallery-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    flex-wrap: wrap;
 }
 
 .gallery-card {
@@ -662,6 +665,8 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     cursor: pointer;
+    width: 400px;
+    flex-shrink: 0;
 }
 
 .gallery-card:hover {
@@ -889,12 +894,12 @@ body {
     }
     
     .gallery-cards-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: 20px;
     }
     
     .gallery-card {
-        max-width: 350px;
+        width: 350px;
         margin: 0 auto;
     }
     

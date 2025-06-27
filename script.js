@@ -52,8 +52,17 @@ let guildMembers = [
     },
 ];
 
-// 갤러리 데이터 저장소
-let galleryImages = [];
+// 갤러리 데이터 저장소 - 기본 이미지들
+let galleryImages = [
+    {
+        title: "함께한 특별한 순간",
+        image: "./Images/1.png"
+    },
+    {
+        title: "길드원들과의 추억", 
+        image: "./Images/2.png"
+    }
+];
 
 // 관리자 모드 토글
 function toggleAdmin() {
@@ -370,18 +379,7 @@ function loadData() {
         guildMembers = JSON.parse(savedMembers);
     }
     
-    // 갤러리 데이터 로드
-    const savedGallery = localStorage.getItem('galleryImages');
-    if (savedGallery) {
-        galleryImages = JSON.parse(savedGallery);
-    } else {
-        // 기본 갤러리 이미지 설정
-        galleryImages = [
-            { title: "함께한 특별한 순간", image: "./Images/1.png" },
-            { title: "길드원들과의 추억", image: "./Images/2.png" }
-        ];
-        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
-    }
+    // 갤러리는 기본 이미지로 고정 (localStorage 사용 안함)
     
     renderMembers();
     renderGallery();
